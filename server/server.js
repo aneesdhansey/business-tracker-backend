@@ -24,6 +24,12 @@ app.post('/todos', (req, res) => {
         .catch((error) => res.status(400).send(error))
 });
 
+app.get('/todos', (req, res) => {
+    Todo.find()
+        .then((todos) => res.send({ todos }))
+        .catch((error) => res.status(400).send({ error }))
+})
+
 app.listen(port, () => console.log(`Listening on port ${port}...`));
 
 module.exports = { app };
