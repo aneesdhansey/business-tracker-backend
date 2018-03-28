@@ -5,7 +5,7 @@ const { ObjectID } = require('mongodb')
 
 dotenv.load();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 const { mongoose } = require('./db/mongoose');
 const { Todo } = require('./models/todo');
@@ -41,7 +41,7 @@ app.get('/todos/:id', (req, res) => {
         .then((todo) => {
             if(!todo)
                 res.status(404).send();
-                
+
             res.send({ todo });
         })
         .catch((error) => res.status(400).send());
