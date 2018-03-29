@@ -89,7 +89,7 @@ app.post('/users', (req, res) => {
     const user = new User(body);
     user.save()
         .then(() => user.generateAuthToken())
-        .then((token) => res.header('x-auth', token).send({ user }))
+        .then((token) => res.header('x-auth', token).send(user))
         .catch((error) => res.status(400).send({ error }));
 });
 
