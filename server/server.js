@@ -1,12 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
 const { ObjectID } = require('mongodb');
 const _ = require('lodash');
 
-dotenv.load();
+require('./config/config');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 const { mongoose } = require('./db/mongoose');
 const { Todo } = require('./models/todo');
