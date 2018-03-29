@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-const { ObjectID } = require('mongodb')
+const { ObjectID } = require('mongodb');
+const _ = require('lodash');
 
 dotenv.load();
 
@@ -34,34 +35,53 @@ app.get('/todos', (req, res) => {
 app.get('/todos/:id', (req, res) => {
     const { id } = req.params;
 
-    if(!ObjectID.isValid(id))
+    if (!ObjectID.isValid(id))
         res.status(404).send();
 
     Todo.findById(id)
         .then((todo) => {
-            if(!todo)
-               return res.status(404).send();
-
-            res.send({ todo });
-        })
-        .catch((error) => res.status(400).send());
-})
-
-app.delete('/todos/:id', (req, res) => {
-    const { id } = req.params;
-
-    if(!ObjectID.isValid(id))
-        return res.status(404).send();
-
-    Todo.findByIdAndRemove(id)
-        .then((todo) => {
-            if(!todo)
+            if (!todo)
                 return res.status(404).send();
 
             res.send({ todo });
         })
         .catch((error) => res.status(400).send());
-})
+});
+
+app.delete('/todos/:id', (req, res) => {
+    const { id } = req.params;
+
+    if (!ObjectID.isValid(id))
+        return res.status(404).send();
+
+    Todo.findByIdAndRemove(id)
+        .then((todo) => {
+            if (!todo)
+                return res.status(404).send();
+
+            res.send({ todo });
+        })
+        .catch((error) => res.status(400).send());
+});
+
+app.patch('/todos/:id', (req, res) => {
+    const { id } = req.params;
+    const body = _.pick(req.body, ['text', 'completed']);
+
+    if (!ObjectID.isValid(id))
+        return res.status(404).send();
+
+    body.completedAt = (_.isBoolean(body.completed) && body.completed) ? new Date().getTime() : null;
+
+    Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+        .then((todo) => {
+            if(!todo)
+                return res.status(404).send();
+            
+            res.send({ todo });
+        })
+        .catch((error) => res.status(400).send())
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));
 
