@@ -1,8 +1,9 @@
 const { ObjectID } = require('mongodb');
 const jwt = require('jsonwebtoken');
 
-const { Todo } = require('../../models/todo');
-const { User } = require('../../models/user');
+// const { Todo } = require('../../models/todo');
+const { User } = require('../../models').user;
+const { Company } = require('../../models').company;
 
 const user1id = new ObjectID();
 const user2id = new ObjectID();
@@ -25,17 +26,17 @@ const users = [{
     }]
 }];
 
-const todos = [
-    { _id: new ObjectID(), text: 'First test todo', _creator: user1id },
-    { _id: new ObjectID(), text: 'Second test todo', completed: true, completedAt: 333, _creator: user2id }
-]
+// const todos = [
+//     { _id: new ObjectID(), text: 'First test todo', _creator: user1id },
+//     { _id: new ObjectID(), text: 'Second test todo', completed: true, completedAt: 333, _creator: user2id }
+// ]
 
-const populateTodos = (done) => {
-    Todo.remove({}).then(() => {
-        Todo.insertMany(todos)
-            .then(() => done());
-    });
-};
+// const populateTodos = (done) => {
+//     Todo.remove({}).then(() => {
+//         Todo.insertMany(todos)
+//             .then(() => done());
+//     });
+// };
 
 const populateUsers = (done) => {
     User.remove().then(() => {
@@ -46,4 +47,11 @@ const populateUsers = (done) => {
     });
 }
 
-module.exports = { todos, populateTodos, users, populateUsers };
+const clearCompanies = async () => {
+    try {
+        await Company.remove();
+    }catch(e) {
+    }
+};
+
+module.exports = { users, populateUsers, clearCompanies };
